@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="#c8c8c8"
+        android:gravity="right">
+
+        <ImageView
+            android:id="@+id/setting"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/ic_settings_black_24dp" />
+    </LinearLayout>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/SRL"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/loc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="56dp"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:text="서울시" />
+            <TextView
+                android:layout_below="@id/loc"
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="12dp"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                tools:text="2019년 12월 19일" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:id="@+id/tmp_LL"
+                android:layout_below="@id/date"
+                android:layout_marginTop="32dp"
+                android:layout_centerHorizontal="true"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/img"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="64dp"
+                    android:id="@+id/cur_tmp"
+                    tools:text="25 ℃" />
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:layout_marginTop="12dp"
+                android:id="@+id/sstmp"
+                android:layout_below="@id/tmp_LL"
+                android:layout_centerHorizontal="true"
+                tools:text="체감온도 23º"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:layout_marginTop="24dp"
+                android:id="@+id/min_max"
+                android:layout_below="@id/sstmp"
+                android:layout_centerHorizontal="true"
+                tools:text="-5º / 3º"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:id="@+id/talk"
+                android:layout_marginTop="32dp"
+                android:layout_below="@id/min_max"
+                android:textStyle="bold"
+                android:layout_centerHorizontal="true"
+                tools:text="일교차가 크니 겉옷을 추천합니다."/>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:id="@+id/uv_LL"
+                android:layout_marginTop="32dp"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/talk"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="32dp"
+                    android:src="@drawable/uv"
+                    android:layout_height="32dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    tools:text="낮음 (2)"
+                    android:id="@+id/uv"
+                    android:textSize="18sp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_gravity="center"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <!--<TextView-->
+                <!--android:id="@+id/text"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:gravity="center"-->
+                <!--android:layout_below="@id/uv_LL"-->
+                <!--android:textSize="20sp"-->
+                <!--tools:text="asd" />-->
+        </RelativeLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</LinearLayout>
