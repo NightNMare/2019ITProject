@@ -34,13 +34,12 @@ public class MainActivity extends AppCompatActivity {
     final String path2 = "https://www.google.com/search?q=%EC%84%9C%EC%9A%B8+%EB%82%A0%EC%94%A8&oq=%EC%84%9C%EC%9A%B8+%EB%82%A0%EC%94%A8&aqs=chrome..69i57j69i59j69i60l2j69i61.1506j0j7&sourceid=chrome&ie=UTF-8";
     Handler handler = new Handler();
     String datas;
-    String weather;
+    String tmpweather;
 //    TextView tv;
     TextView date,cur_tmp,sstmp,min_max,talk,uv;
     String str_date,str_curtmp,str_sstmp,str_min_max,str_talk,str_uv;
     ImageView img, setting;
     SwipeRefreshLayout SRL;
-    private String curTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,8 +96,9 @@ public class MainActivity extends AppCompatActivity {
                     Element lv1 = doc.getElementsByClass("lv1").get(0);
                     Element cast_txt = doc.getElementsByClass("cast_txt").get(0);//℃
 
-                    weather = todayweather.attr("alt");
-
+//                    weather = todayweather.attr("alt");
+                    tmpweather = todayweather.attr("src");
+                    tmpweather = "https:"+tmpweather;
                     datas = "tmp:"+tem.text()+
                             "\nmintmp:"+mintem.text()+
                             "\nmaxtmp:"+maxtem.text()+
@@ -107,12 +107,11 @@ public class MainActivity extends AppCompatActivity {
                             "\ncast_txt:"+cast_txt.text()+
                             "\n"+todayweather.attr("alt")+
                             "\n";
-                    str_curtmp = tem.text();
+                    str_curtmp = tem.text()+"℃";
                     str_sstmp = "체감온도: "+sensibletem.text();
                     str_min_max = mintem.text()+"º / "+maxtem.text()+"º";
                     str_talk = cast_txt.text().split(",")[1];
                     str_uv = lv1.text().substring(lv1.text().length()-2)+" ("+lv1.text().substring(0,lv1.text().length()-2)+")";
-
                 } catch (IOException e) {
                     e.printStackTrace();
                     Log.e("asd", e.getMessage());
@@ -121,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
 //                        tv.setText(datas);
-                        switch(weather){
+                        /*switch(weather){
                             case "소나기(약함)":
                             case "소나기": img.setImageResource(R.drawable.rain1); break;
                             case "흐리고 한때 비": img.setImageResource(R.drawable.rain_cloud); break;
@@ -139,7 +138,8 @@ public class MainActivity extends AppCompatActivity {
                             case "비":img.setImageResource(R.drawable.rain);break;
                             case "흐리고 때때로 갬":img.setImageResource(R.drawable.cloudy_sunny);break;
                             case "흐림": img.setImageResource(R.drawable.cloudy);break;
-                        }
+                        }*/
+                        Glide.with(getApplicationContext()).load(tmpweather).into(img);
                         cur_tmp.setText(str_curtmp);
                         sstmp.setText(str_sstmp);
                         min_max.setText(str_min_max);
