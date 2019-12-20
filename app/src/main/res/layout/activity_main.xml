@@ -37,14 +37,15 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="56dp"
+                android:text="서울시"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                android:text="서울시" />
+                android:textStyle="bold" />
+
             <TextView
-                android:layout_below="@id/loc"
                 android:id="@+id/date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/loc"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="12dp"
                 android:textSize="20sp"
@@ -52,12 +53,12 @@
                 tools:text="2019년 12월 19일" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
                 android:id="@+id/tmp_LL"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/date"
-                android:layout_marginTop="32dp"
                 android:layout_centerHorizontal="true"
-                android:layout_height="wrap_content">
+                android:layout_marginTop="32dp">
 
                 <ImageView
                     android:id="@+id/img"
@@ -66,69 +67,85 @@
                     android:layout_gravity="center" />
 
                 <TextView
+                    android:id="@+id/cur_tmp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="64dp"
-                    android:id="@+id/cur_tmp"
                     tools:text="25 ℃" />
             </LinearLayout>
+
             <TextView
+                android:id="@+id/sstmp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:layout_marginTop="12dp"
-                android:id="@+id/sstmp"
                 android:layout_below="@id/tmp_LL"
                 android:layout_centerHorizontal="true"
-                tools:text="체감온도 23º"/>
+                android:layout_marginTop="12dp"
+                android:textSize="18sp"
+                tools:text="체감온도 23º" />
+
             <TextView
+                android:id="@+id/min_max"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="24sp"
-                android:layout_marginTop="24dp"
-                android:id="@+id/min_max"
                 android:layout_below="@id/sstmp"
                 android:layout_centerHorizontal="true"
-                tools:text="-5º / 3º"/>
+                android:layout_marginTop="24dp"
+                android:textSize="24sp"
+                tools:text="-5º / 3º" />
+
+            <ImageView
+                android:id="@+id/cloth"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="16dp"
+                android:layout_below="@id/min_max"
+                tools:src="@drawable/shortcloth" />
+
+
             <TextView
+                android:id="@+id/talk"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/cloth"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="32dp"
                 android:textSize="18sp"
-                android:id="@+id/talk"
-                android:layout_marginTop="32dp"
-                android:layout_below="@id/min_max"
                 android:textStyle="bold"
-                android:layout_centerHorizontal="true"
-                tools:text="일교차가 크니 겉옷을 추천합니다."/>
+                tools:text="일교차가 크니 겉옷을 추천합니다." />
+
             <LinearLayout
-                android:layout_width="wrap_content"
                 android:id="@+id/uv_LL"
-                android:layout_marginTop="32dp"
-                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/talk"
-                android:layout_height="wrap_content">
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="32dp">
+
                 <ImageView
                     android:layout_width="32dp"
-                    android:src="@drawable/uv"
-                    android:layout_height="32dp" />
+                    android:layout_height="32dp"
+                    android:src="@drawable/uv" />
+
                 <TextView
-                    android:layout_width="wrap_content"
-                    tools:text="낮음 (2)"
                     android:id="@+id/uv"
-                    android:textSize="18sp"
-                    android:layout_marginLeft="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_height="wrap_content" />
+                    android:layout_marginLeft="8dp"
+                    android:textSize="18sp"
+                    tools:text="낮음 (2)" />
             </LinearLayout>
 
             <!--<TextView-->
-                <!--android:id="@+id/text"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent"-->
-                <!--android:gravity="center"-->
-                <!--android:layout_below="@id/uv_LL"-->
-                <!--android:textSize="20sp"-->
-                <!--tools:text="asd" />-->
+            <!--android:id="@+id/text"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:gravity="center"-->
+            <!--android:layout_below="@id/uv_LL"-->
+            <!--android:textSize="20sp"-->
+            <!--tools:text="asd" />-->
         </RelativeLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

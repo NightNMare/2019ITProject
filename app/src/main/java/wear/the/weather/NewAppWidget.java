@@ -29,14 +29,18 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static android.content.Context.MODE_PRIVATE;
+
 /**
  * Implementation of App Widget functionality.
  */
 public class NewAppWidget extends AppWidgetProvider {
     static String date, etc, temp;
     private static final String ACTION_BUTTON1 = "com.example.gyu_won.lunch_for_sunrin.Refresh";
-    static String img=null;
+    static String img = null;
+    static int cloth = 0;
     static SharedPreferences prefs;
+
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
@@ -48,12 +52,13 @@ public class NewAppWidget extends AppWidgetProvider {
         views.setTextViewText(R.id.widget_temp, temp);
         AppWidgetTarget target = new AppWidgetTarget(context, R.id.widget_img, views, appWidgetId);
         Glide.with(context).asBitmap().centerCrop().load(img).into(target);
+        views.setImageViewResource(R.id.widget_cloth,cloth);
         prefs = context.getSharedPreferences("isBlack", Context.MODE_PRIVATE);
-        if(prefs.getBoolean("isBlack",false)){//widget_temp widget_date
+        if (prefs.getBoolean("isBlack", false)) {//widget_temp widget_date
             views.setTextColor(R.id.widget_etc, Color.BLACK);
             views.setTextColor(R.id.widget_temp, Color.BLACK);
             views.setTextColor(R.id.widget_date, Color.BLACK);
-        }else{
+        } else {
             views.setTextColor(R.id.widget_etc, Color.WHITE);
             views.setTextColor(R.id.widget_temp, Color.WHITE);
             views.setTextColor(R.id.widget_date, Color.WHITE);
@@ -66,6 +71,7 @@ public class NewAppWidget extends AppWidgetProvider {
 
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
+
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -82,8 +88,6 @@ public class NewAppWidget extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-
-        Log.e("1", "1");
         update u = new update(context, appWidgetManager, appWidgetIds);
         u.thread.start();
 //        for (int appWidgetId : appWidgetIds) {
@@ -106,6 +110,8 @@ public class NewAppWidget extends AppWidgetProvider {
         Context context;
         AppWidgetManager appWidgetManager;
         int[] appWidgetIds;
+        private int tmp;
+        private int mintmp, maxtmp;
 
         update(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
             this.context = context;
@@ -136,10 +142,14 @@ public class NewAppWidget extends AppWidgetProvider {
                     Element todayweather = doc2.getElementById("wob_tci");
 
                     Element tem = doc.getElementsByClass("todaytemp").get(0);
+                    Element mintem = doc.getElementsByClass("min").get(0).child(0);
+                    Element maxtem = doc.getElementsByClass("max").get(0).child(0);
+                    mintmp = Integer.parseInt(mintem.text());
+                    maxtmp = Integer.parseInt(maxtem.text());
                     Element cast_txt = doc.getElementsByClass("cast_txt").get(0);//℃
-
-                    img = "https:"+todayweather.attr("src");
-                    temp = tem.text()+"℃";
+                    tmp = Integer.parseInt(tem.text());
+                    img = "https:" + todayweather.attr("src");
+                    temp = tem.text() + "℃";
 //                            str_curtmp = tem.text();
 //                            str_talk = cast_txt.text().split(",")[1];
                     etc = cast_txt.text().split(",")[1];//==========================================옷 차림으로 바꾸기
@@ -151,13 +161,80 @@ public class NewAppWidget extends AppWidgetProvider {
                     @Override
                     public void run() {
 //                        GetData(context, appWidgetManager, appWidgetIds);
+                        setData(context,appWidgetManager,appWidgetIds);
                         date = date.substring(0, 4) + "년 " + date.substring(4, 6) + "월 " + date.substring(6) + "일";
-                        for (int appWidgetId : appWidgetIds) {
-                            updateAppWidget(context, appWidgetManager, appWidgetId);
-                        }
+//                        for (int appWidgetId : appWidgetIds) {
+//                            updateAppWidget(context, appWidgetManager, appWidgetId);
+//                        }
                     }
                 });
             }
         };
+
+        void setData(Context context,AppWidgetManager appWidgetManager,int appWidgetIds[]) {
+            SharedPreferences prefs = context.getSharedPreferences("Temperature", MODE_PRIVATE);
+            SharedPreferences pref = context.getSharedPreferences("isBlack", MODE_PRIVATE);
+            int verycold = prefs.getInt("verycold", 5);
+            int cold = prefs.getInt("cold", 10);
+            int cool = prefs.getInt("cool", 15);
+            int mild = prefs.getInt("mild", 23);
+            int littlehot = prefs.getInt("littlehot", 25);
+            int hot = prefs.getInt("hot", 50);
+//        mintmp,maxtmp
+            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.new_app_widget);
+            if (tmp <= verycold) {
+                if (pref.getBoolean("isBlack", false)) {//widget_temp widget_date
+                    cloth = R.drawable.paddingcloth;
+                } else {
+                    cloth = R.drawable.paddingclothw;
+                }
+            } else if (tmp <= cold) {
+                if (pref.getBoolean("isBlack", false)) {//widget_temp widget_date
+                    cloth = R.drawable.jacekt;
+                } else {
+                    cloth = R.drawable.jacektw;
+                }
+            } else if (tmp <= cool) {
+                if (pref.getBoolean("isBlack", false)) {//widget_temp widget_date
+                    cloth = R.drawable.jacekt;
+                } else {
+                    cloth = R.drawable.jacektw;
+                }
+            } else if (tmp <= mild) {
+                if (pref.getBoolean("isBlack", false)) {//widget_temp widget_date
+                    cloth = R.drawable.longcloth;
+                } else {
+                    cloth = R.drawable.longclothw;
+                }
+            } else if (tmp <= littlehot) {
+                if (pref.getBoolean("isBlack", false)) {//widget_temp widget_date
+                    cloth = R.drawable.shortcloth;
+                } else {
+                    cloth = R.drawable.shortclothw;
+                }
+            } else if (tmp <= hot) {
+                if (pref.getBoolean("isBlack", false)) {//widget_temp widget_date
+                    cloth = R.drawable.shortcloth;
+                } else {
+                    cloth = R.drawable.shortclothw;
+                }
+            } else {
+                //오류
+            }
+            if (mintmp > 0 && mintmp < 22) {
+                if (maxtmp - mintmp > 8) {
+                    if (pref.getBoolean("isBlack", false)) {//widget_temp widget_date
+                        cloth = R.drawable.jacekt;
+                    } else {
+                        cloth = R.drawable.jacektw;
+                    }
+                    //일교차 큼 (겉옷
+                    etc = "일교차가 크니 겉옷을 챙겨주세요.";
+                }
+            }
+            for (int appWidgetId : appWidgetIds) {
+                updateAppWidget(context, appWidgetManager, appWidgetId);
+            }
+        }
     }
 }

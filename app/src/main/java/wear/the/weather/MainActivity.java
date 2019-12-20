@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,6 +29,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class MainActivity extends AppCompatActivity {
 
     final String path = "https://search.naver.com/search.naver?sm=top_hty&fbm=0&ie=utf8&query=%EC%84%9C%EC%9A%B8+%EB%82%A0%EC%94%A8";
@@ -35,11 +38,13 @@ public class MainActivity extends AppCompatActivity {
     Handler handler = new Handler();
     String datas;
     String tmpweather;
-//    TextView tv;
-    TextView date,cur_tmp,sstmp,min_max,talk,uv;
-    String str_date,str_curtmp,str_sstmp,str_min_max,str_talk,str_uv;
-    ImageView img, setting;
+    //    TextView tv;
+    TextView date, cur_tmp, sstmp, min_max, talk, uv;
+    String str_date, str_curtmp, str_sstmp, str_min_max, str_talk, str_uv;
+    ImageView img, setting,cloth;
     SwipeRefreshLayout SRL;
+    private int mintmp, maxtmp;
+    private int tmp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,13 +53,14 @@ public class MainActivity extends AppCompatActivity {
 //        tv = findViewById(R.id.text);
         img = findViewById(R.id.img);
         setting = findViewById(R.id.setting);
-        date=findViewById(R.id.date);
-        cur_tmp=findViewById(R.id.cur_tmp);
-        sstmp=findViewById(R.id.sstmp);
-        min_max=findViewById(R.id.min_max);
-        talk=findViewById(R.id.talk);
-        uv=findViewById(R.id.uv);
+        date = findViewById(R.id.date);
+        cur_tmp = findViewById(R.id.cur_tmp);
+        sstmp = findViewById(R.id.sstmp);
+        min_max = findViewById(R.id.min_max);
+        talk = findViewById(R.id.talk);
+        uv = findViewById(R.id.uv);
         SRL = findViewById(R.id.SRL);
+        cloth= findViewById(R.id.cloth);
 
         SRL.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -67,13 +73,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //셋팅 이벤트
-                Intent intent = new Intent(MainActivity.this,SettingActivity.class);
+                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
                 startActivity(intent);
             }
         });
         getDate();
         GetData();
     }
+
     private void getDate() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         Date date = new Date();
@@ -98,20 +105,23 @@ public class MainActivity extends AppCompatActivity {
 
 //                    weather = todayweather.attr("alt");
                     tmpweather = todayweather.attr("src");
-                    tmpweather = "https:"+tmpweather;
-                    datas = "tmp:"+tem.text()+
-                            "\nmintmp:"+mintem.text()+
-                            "\nmaxtmp:"+maxtem.text()+
-                            "\nsstmp:"+sensibletem.text()+
-                            "\nlv1:"+lv1.text()+
-                            "\ncast_txt:"+cast_txt.text()+
-                            "\n"+todayweather.attr("alt")+
-                            "\n";
-                    str_curtmp = tem.text()+"℃";
-                    str_sstmp = "체감온도: "+sensibletem.text();
-                    str_min_max = mintem.text()+"º / "+maxtem.text()+"º";
+                    tmpweather = "https:" + tmpweather;
+//                    datas = "tmp:" + tem.text() +
+//                            "\nmintmp:" + mintem.text() +
+//                            "\nmaxtmp:" + maxtem.text() +
+//                            "\nsstmp:" + sensibletem.text() +
+//                            "\nlv1:" + lv1.text() +
+//                            "\ncast_txt:" + cast_txt.text() +
+//                            "\n" + todayweather.attr("alt") +
+//                            "\n";
+                    str_curtmp = tem.text() + "℃";
+                    tmp = Integer.parseInt(tem.text());
+                    str_sstmp = "체감온도: " + sensibletem.text();
+                    str_min_max = mintem.text() + "º / " + maxtem.text() + "º";
+                    mintmp = Integer.parseInt(mintem.text());
+                    maxtmp = Integer.parseInt(maxtem.text());
                     str_talk = cast_txt.text().split(",")[1];
-                    str_uv = lv1.text().substring(lv1.text().length()-2)+" ("+lv1.text().substring(0,lv1.text().length()-2)+")";
+                    str_uv = lv1.text().substring(lv1.text().length() - 2) + " (" + lv1.text().substring(0, lv1.text().length() - 2) + ")";
                 } catch (IOException e) {
                     e.printStackTrace();
                     Log.e("asd", e.getMessage());
@@ -145,12 +155,50 @@ public class MainActivity extends AppCompatActivity {
                         min_max.setText(str_min_max);
                         talk.setText(str_talk);
                         uv.setText(str_uv);
-                        date.setText(str_date.substring(0,4)+"년 "+str_date.substring(4,6)+"월 "+str_date.substring(6)+"일");
+                        date.setText(str_date.substring(0, 4) + "년 " + str_date.substring(4, 6) + "월 " + str_date.substring(6) + "일");
+
+                        setData();//추천 옷
+
                         SRL.setRefreshing(false);
                     }
                 });
             }
         }.start();
+
+    }
+
+    void setData() {
+        SharedPreferences prefs = getSharedPreferences("Temperature", MODE_PRIVATE);
+        int verycold = prefs.getInt("verycold", 5);
+        int cold = prefs.getInt("cold", 10);
+        int cool = prefs.getInt("cool", 15);
+        int mild = prefs.getInt("mild", 23);
+        int littlehot = prefs.getInt("littlehot", 25);
+        int hot = prefs.getInt("hot", 50);
+//        mintmp,maxtmp
+
+        if (tmp <= verycold) {
+            cloth.setImageResource(R.drawable.paddingcloth);
+        } else if (tmp <= cold) {
+            cloth.setImageResource(R.drawable.jacekt);
+        } else if (tmp <= cool) {
+            cloth.setImageResource(R.drawable.jacekt);
+        } else if (tmp <= mild) {
+            cloth.setImageResource(R.drawable.longcloth);
+        } else if (tmp <= littlehot) {
+            cloth.setImageResource(R.drawable.shortcloth);
+        } else if (tmp <= hot) {
+            cloth.setImageResource(R.drawable.shortcloth);
+        } else {
+            //오류
+        }
+        if (mintmp > 0&&mintmp<22) {
+            if (maxtmp - mintmp > 8) {
+                //일교차 큼 (겉옷
+                cloth.setImageResource(R.drawable.jacekt);
+                talk.setText("일교차가 크니 겉옷을 챙겨주세요.");
+            }
+        }
     }
 
 }
